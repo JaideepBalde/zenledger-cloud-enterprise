@@ -7,8 +7,8 @@ import { UserRole, RequestStatus, TransactionType } from './types';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
-const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://jaydeep:jaydeep123@jaydeep.ezjfkgl.mongodb.net/?appName=jaydeep";
+const JWT_SECRET = process.env.JWT_SECRET;
+const MONGO_URI = process.env.MONGO_URI;
 
 // Fixed: cast to any to avoid middleware type mismatch errors in TypeScript with Express overloads.
 app.use(cors() as any);
