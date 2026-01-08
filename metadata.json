@@ -1,0 +1,12 @@
+
+{
+  "name": "ZenLedger Cloud Enterprise",
+  "description": "Institutional-grade family wealth governance with AI-driven strategy modules and immutable ledger technology.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "infrastructure": {
+    "database": "MongoDB Atlas (jaydeep)",
+    "auth": "JWT HS256 Standard"
+  }
+}

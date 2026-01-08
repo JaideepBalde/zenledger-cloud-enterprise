@@ -1,0 +1,113 @@
+
+ZENLEDGER CLOUD ENTERPRISE - TECHNICAL DOCUMENTATION
+----------------------------------------------------
+
+1. PROJECT OVERVIEW
+ZenLedger is an institutional-grade family wealth governance application designed on a Parent-Child model. Unlike traditional "balance-stored" apps, ZenLedger utilizes a pure Ledger-Based architecture. Balances are never stored as a static number in the database; instead, they are derived in real-time by evaluating the entire chronological sequence of transactions (CREDIT/DEBIT). This ensures absolute mathematical integrity and a perfect audit trail for family finance.
+
+2. TECH STACK
+Frontend:
+- React 19 (Functional Components, Hooks)
+- TypeScript (Strict Mode)
+- Vite (Build Tool)
+- Tailwind CSS (Premium Fintech UI)
+
+Backend / Infrastructure:
+- Node.js & Express
+- JWT HS256 Authentication
+- MongoDB Atlas (Cloud Database)
+- LocalStorage Fallback (for offline/demo persistence)
+
+3. LOCAL DEVELOPMENT SETUP
+To run ZenLedger on your local machine:
+
+Step 1: Prerequisites
+- Ensure Node.js (v18+) and npm are installed.
+
+Step 2: Installation
+- Clone the repository.
+- Execute 'npm install' in the project root to install all dependencies.
+
+Step 3: Environment Configuration
+- Create a .env file in the root directory.
+- Define the following keys:
+  API_KEY=[Your Google Gemini API Key]
+  VITE_USE_CLOUD=true (Enable for real backend usage)
+  VITE_API_URL=http://localhost:3000 (Local backend port)
+  MONGO_URI=[Your MongoDB Connection String]
+  JWT_SECRET=[Secure String for Token Signing]
+
+Step 4: Execution
+- Run 'npm run dev' to start the development server.
+- The app will typically be available at http://localhost:5173.
+
+4. OPERATIONAL FLOWS
+
+Parent (Administrative Node):
+- Registration: Establish a new Family Cloud ID.
+- Member Management: Provision child nodes with unique handles and passphrases.
+- Capital Allocation: Execute CREDIT transactions to fund child wallets.
+- Authorization: Review and Approve/Reject pending money requests from children.
+- Oversight: Monitor child spending patterns and communication logs.
+- Portability: Export child ledgers and monthly summaries to CSV for external review.
+- System Wipe: Exclusive authority to erase all intra-family records.
+
+Child (Member Node):
+- Identity: Access the unit via Parent-provided credentials.
+- Ledger Logging: Record DEBIT transactions for every expenditure.
+- Request Funding: Submit requests for capital with specific reasoning.
+- Communication: Direct secure messaging to Parent for finance-related notes.
+- Audit: View personal transaction history and current derived liquidity.
+
+5. SECURITY & ACCESS CONTROL
+- Role Enforcement: All sensitive operations (allocation, child creation, reset) are validated against the UserRole.PARENT constant in the service layer.
+- Scope Isolation: Data is strictly filtered by 'familyId' (Cloud ID). Users can never access data belonging to another family unit.
+- Immutable Ledger: Transactions are append-only. There is no logic for EDIT or DELETE of individual ledger entries, preserving the audit trail.
+- Client Side: UI elements (like export buttons or wipe options) are conditionally rendered based on the verified JWT session role.
+
+6. DATA MODEL & LEDGER LOGIC
+- User: Identity record containing role, familyId, and status.
+- Transaction: Primary record. Type (CREDIT/DEBIT) determines the mathematical impact on the derived balance.
+- MoneyRequest: State-managed record (PENDING/APPROVED/REJECTED) for capital flow.
+- FamilyMessage: Scoped communication record between parent and child nodes.
+
+Logic:
+Derived Balance = (SUM of all transactions where type is CREDIT) - (SUM of all transactions where type is DEBIT).
+
+7. PRODUCTION HOSTING GUIDE
+
+Database (MongoDB Atlas):
+1. Create a free M0 cluster on MongoDB Atlas.
+2. Under "Network Access," whitelist 0.0.0.0/0 or the specific Render IP.
+3. Obtain the connection string and add it to the backend environment variables.
+
+Backend (Render):
+1. Create a "Web Service" and connect your GitHub repository.
+2. Runtime: Node.
+3. Build Command: `npm install && tsc`
+4. Start Command: `node server.js`
+5. Add env vars: MONGO_URI, JWT_SECRET.
+
+Frontend (Vercel):
+1. Import the repository to Vercel.
+2. Configure environment variables:
+   - VITE_USE_CLOUD=true
+   - VITE_API_URL=[URL of your Render Backend]
+3. Deploy.
+
+8. MULTI-DEVICE SYNCHRONIZATION
+ZenLedger supports seamless multi-device synchronization. Because the state is managed via a central Cloud ID and persisted in MongoDB, a Parent can allocate funds on a desktop while a Child logs an expense on a mobile device. The Derived Balance will update across all authorized sessions upon the next synchronization pulse.
+
+9. RESET & WIPE PROTOCOL
+The "Execute Wipe" protocol is restricted solely to the Parent role. It performs a deep erase of all intra-family transactions, requests, messages, and child accounts. This is intended for demo refreshes or total family financial restructuring.
+
+10. TROUBLESHOOTING
+- Blank Screen: Verify that the API_KEY and other environment variables are correctly loaded.
+- Login Failed: Ensure the Cloud ID is typed exactly as it was during establishment (it is case-sensitive).
+- Export Issues: Ensure browser pop-up blockers are not preventing the CSV file download.
+
+11. PROJECT STATUS
+ZenLedger Cloud is a production-ready financial ledger framework. It is designed to be extensible—future modules can include AI-driven budgeting, Redis-based real-time notifications, and multi-parent co-signing for large capital requests.
+
+----------------------------------------------------
+Standard v16.5-PRO • Documented by Jaydeep Balde 2026
